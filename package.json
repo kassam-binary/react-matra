@@ -1,0 +1,59 @@
+{
+  "name": "@binarycode/react-matra",
+  "version": "1.0.0",
+  "description": "React component for Mantra biometric fingerprint devices (MS100 & MS500)",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "build:watch": "rollup -c -w",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "react",
+    "biometric",
+    "fingerprint",
+    "mantra",
+    "ms100",
+    "ms500",
+    "authentication",
+    "biometric-scanner"
+  ],
+  "author": "Kassam Mustapha <mustaphakassam@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kassam-binary/react-matra.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kassam-binary/react-matra/issues"
+  },
+  "homepage": "https://github.com/kassam-binary/react-matra#readme",
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
+    "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "reactstrap": "^9.2.0",
+    "sweetalert2": "^11.10.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.0",
+    "@babel/preset-env": "^7.23.0",
+    "@babel/preset-react": "^7.23.0",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@types/react": "^18.2.0",
+    "rollup": "^4.9.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4"
+  }
+}
