@@ -283,13 +283,13 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-MIT © [Your Name]
+MIT © Kassam Mustapha
 
 ## Support
 
 For issues and questions:
-- GitHub Issues: [https://github.com/yourusername/react-matra-biometric/issues](https://github.com/yourusername/react-matra-biometric/issues)
-- Email: your.email@example.com
+- GitHub Issues: [https://github.com/kassam-binary/react-matra/issues](https://github.com/kassam-binary/react-matra/issues)
+- Email: mustaphakassam@gmail.com
 
 ## Changelog
 
