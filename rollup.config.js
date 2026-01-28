@@ -27,7 +27,8 @@ export default {
     babel({
       exclude: 'node_modules/**',
       presets: ['@babel/preset-env', '@babel/preset-react'],
-      babelHelpers: 'bundled'
+      babelHelpers: 'bundled',
+      extensions: ['.js', '.jsx']
     }),
     commonjs(),
     terser()
