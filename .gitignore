@@ -39,3 +39,6 @@ coverage/
 *.tmp
 .cache/
 .npmrc
+PACKAGE_STRUCTURE.md
+PUBLISHING_GUIDE.md
+QUICK_START.md
