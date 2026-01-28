@@ -1,6 +1,6 @@
 {
   "name": "@binarycode/react-matra",
-  "version": "1.0.0",
+  "version": "1.0.1-patch",
   "description": "React component for Mantra biometric fingerprint devices (MS100 & MS500)",
   "type": "module",
   "main": "dist/index.js",
