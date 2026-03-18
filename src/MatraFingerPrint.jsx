@@ -40,6 +40,17 @@ const MatraFingerPrint = ({
     const fingerOptions = useRef();
 
     /**
+     * payload for fingerprint callbacks
+     */
+    const buildCaptureData = useCallback((response) => ({
+        ...response,
+        selectedFingerCode: fingerOptions.current?.value || '',
+        selectedFingerText: fingerOptions.current?.options?.[fingerOptions.current.selectedIndex]?.text || '',
+        deviceType,
+        capturedAt: new Date().toISOString()
+    }), [deviceType]);
+
+    /**
      * Get device configuration
      */
     const getDeviceConfig = useCallback(() => {
@@ -66,7 +77,7 @@ const MatraFingerPrint = ({
      */
     useEffect(() => {
         checkDeviceStatus();
-    }, [deviceType]);
+    }, [checkDeviceStatus]);
 
     /**
      * Check if device is connected
@@ -198,14 +209,13 @@ const MatraFingerPrint = ({
     /**
      * Handle login verification
      */
-    const handleLogin = useCallback(async (capturedRes) => {
+    const handleLogin = useCallback(async (capturedRes, captureData) => {
         try {
             if (!fetchUserBiometricData) {
                 throw new Error('fetchUserBiometricData function is required for login action');
             }
 
             const userDataRes = await fetchUserBiometricData(form);
-            setLoading(false);
 
             if (userDataRes?.status && userDataRes?.data?.data?.iso_template) {
                 const verifyResult = await PostMFS100Client("match", {
@@ -215,8 +225,10 @@ const MatraFingerPrint = ({
                 });
 
                 if (isFingerMatch(verifyResult)) {
+                    const loginResult = { matched: true, ...captureData };
                     setWarningMessage("Fingerprint matched successfully");
-                    fingerData({ matched: true, ...capturedRes });
+                    setFingerResponse(loginResult);
+                    fingerData(loginResult);
                     
                     if (onLoginSuccess) {
                         onLoginSuccess(userDataRes);
@@ -233,16 +245,21 @@ const MatraFingerPrint = ({
                         ? verifyResult?.ErrorDescription || "Capture timed out"
                         : "Fingerprint did not match";
 
+                    setWarningMessage(resMessage);
                     showValidationMessage("error", resMessage);
-                    fingerData({ matched: false, ...capturedRes });
+                    setFingerResponse(captureData);
+                    fingerData({ matched: false, ...captureData });
                 }
             } else {
+                setWarningMessage("User biometric data not found");
                 showValidationMessage("error", "User biometric data not found");
             }
         } catch (error) {
-            setLoading(false);
             console.error("Verification error:", error);
+            setWarningMessage("Error during fingerprint verification");
             showValidationMessage("error", error.message || "Error during fingerprint verification");
+        } finally {
+            setLoading(false);
         }
     }, [form, PostMFS100Client, isFingerMatch, fingerData, showValidationMessage, fetchUserBiometricData, onLoginSuccess]);
 
@@ -278,23 +295,17 @@ const MatraFingerPrint = ({
             const errorCode = parseInt(response.ErrorCode);
 
             if (errorCode === 0) {
+                const captureData = buildCaptureData(response);
+
                 setForm(prev => ({
                     ...prev,
-                    ...response
+                    ...captureData
                 }));
 
                 if (action === 'login') {
-                    await handleLogin(response);
+                    await handleLogin(response, captureData);
                 } else {
                     setLoading(false);
-                    
-                    const captureData = {
-                        ...response,
-                        selectedFingerCode: fingerOptions.current?.value || '',
-                        selectedFingerText: fingerOptions.current?.options?.[fingerOptions.current.selectedIndex]?.text || '',
-                        deviceType: deviceType,
-                        capturedAt: new Date().toISOString()
-                    };
 
                     setFingerResponse(captureData);
                     fingerData(captureData);
@@ -313,7 +324,7 @@ const MatraFingerPrint = ({
             setError(`Failed to capture fingerprint. ${config.name} device may not be connected.`);
             setWarningMessage('Capture failed - Check device connection');
         }
-    }, [action, form, getDeviceConfig, PostMFS100Client, deviceType, fingerData, handleLogin]);
+    }, [action, form, getDeviceConfig, PostMFS100Client, fingerData, handleLogin, buildCaptureData]);
 
     /**
      * Switch device type
